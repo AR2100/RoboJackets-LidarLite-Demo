@@ -8,8 +8,10 @@
 class LIDARLite
 {
     public:
-        
-        LIDARLite();
+        LIDARLite(char =LIDARLITE_ADDR_DEFAULT);
+        void reset(char =LIDARLITE_ADDR_DEFAULT);
+        int getDistance(bool =true, char =LIDARLITE_ADDR_DEFAULT);
+        void LIDARLite::changeI2CAddress(char newI2CAddress);
 
         /* Read command for LIDARLite
         *
@@ -19,7 +21,8 @@ class LIDARLite
         * val: value to write to register
         * lidarliteAddress: I2C address of the lidarLite
         */
-        void read();
+        bool LIDARLite::read(char registerAddr, char *dataArr, int numBytes,
+                            char lidarliteAddress, bool autoIncrement);
 
         /* Write command for LIDARLite
         *
@@ -32,12 +35,12 @@ class LIDARLite
         * busyFlag: if true, routine will repeatedly read the 
         *   status register until the busy flag (LSB) is low
         */
-        void write(lidarliteAddress, cmd, 1);
-
+        bool LIDARLite::write(char registerAddr, char data, char lidarliteAddress);
+        bool LIDARLite::writeArray(char registerAddr, char* dataArr, int length, char lidarliteAddress);
     private:
-        PinName sdaPin(p9);
-        PinName sclPin(p10);
-        I2C i2c(sdaPin, sclPin);
-}
+        PinName sdaPin;
+        PinName sclPin;
+        I2C i2c;
+};
 
 #endif
